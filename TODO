@@ -1,0 +1,24 @@
+4. Add a grid and snapping (maybe).
+5. Add a text tool.
+6. Add rectangle tool?
+9. Undo could keep track of when each stroke was made, and then save it as a movie?
+10. Size of canvases should be automatic (but aspect ratio maintained) based on window size.
+    - Actually resize all the elements, use the scale command
+13. Delete page (with confirmation)
+14. Add confirmation to Clear.
+15. More spacing between buttons
+17. cursor and pointer are redundant
+18. Dashed lines ":Dashed" the note says
+20. Add text "Page x of X" to palette
+21. Allow for a second window which mirrors the first but without the palette, that can be used with a second screen.
+22. Remove the points that accompany each line.
+23. I already can do straight lines, but hold down a button to see the phantom line that I am potentially drawing.  Hold down shift to snap to vertical or horizontal.
+24. Create a fork that removes all the paging and saving aspects (and pointer), makes the page size more variable and adjustable, but keeps the clipboard. It can be a quick doodler for Keynote and such.
+
+
+TEXT: (should also work for rectangles and other types)
+- Fix undo and redo
+- Texts should be given a curobj number of their own
+- I'm not sure I need the .o objects at all. Try not keeping them or deleting them.
+- Fix print
+- Fix autosave

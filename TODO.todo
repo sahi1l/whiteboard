@@ -1,0 +1,92 @@
+* BUGS
+** Dash isn't working right now
+** Text doesn't shrink with the mirror
+*** Width of the window needs to shrink
+*** Font size needs to change
+
+* Sanity checking
+** The second entry in Elements::elements(1l0) should be l0, etc.  Is it?
+** If Elements::elements(1l0) exists, then .c.pg1 must contain l0, and vice versa
+** Should I run this frequently?
+*** With every Add? Every Undo/Redo?
+
+* DONE Text
+** DONE Make sure that I can insert text via command first
+*** Insert text
+*** Edit it
+*** Undo and redo
+*** Save and load
+** DONE Put text in the background
+   I don't think I can
+** UI for entering text
+*** DONE A way to insert a text window at the mouse (Command-T?)
+*** DONE Press Return in an entry to create a second entry right below it?
+*** DONE Change width? (Command key when inside the entry itself)
+*** DONE Text replacement for Greek letters etc. Like :lambda: ? Or alt-keys?
+* Images
+** Basic command
+*** In Drawing, a StartImage and Image command to include image
+*** What elements do I need to 
+** UI
+*** How to paste image in a window (Command-V)
+*** How to resize it or move it
+**** One keystroke to "pick up" the image, and then it attaches to the mouse so you can move it
+**** Press + and - when it's picked up to resize it
+**** Backspace/Delete to delete it
+**** Return to drop it
+*** Should be a way to delete it
+*** Always in the background, behind text even
+** I will need to tweak the save routine to keep the images
+*** Make a package 
+**** Can I use an extension other than .pkg?
+     https://apple.stackexchange.com/questions/280280/what-makes-an-macos-package-show-as-a-package
+*** Copy images into the package
+*** Possibly copy PDFs in as well, or a small PNG of pages for previews
+*** Save my current "save file" inside the package
+   
+* DONE [#A] Fix Save and Load to match the current setup
+** Handle Text correctly
+** DONE Add an Open feature
+** I want to be able to insert a previous page
+*** Finish the part of the File::Load function that lets you load a range of pages
+*** Choose a file and then open a dialog box to ask for the list of pages
+*** Preview option?
+    This means a new window, and configuring some of the drawing programs to handle a different widget
+**** Checkbox next to each number
+**** Make the windows smaller so I can see a whole canvas
+**** No editing of course
+*** Or simpler, the ability to delete pages
+    Except that this means repaginating which is a problem
+**** Possibility: have "hidden" pages which appear on .c but not .mirror
+***** Different style of the numbered header
+***** Click on a checkbox in the header to make visible or invisible
+***** Invisible pages are not printed out
+***** Invisible pages ARE saved and loaded
+
+* There should be a way to delete elements completely without it screwing everything up
+* Do something more with Autosave
+** Maybe autosave in a permanent location like ~/.whiteboard
+** Use a lockfile (deleted on Quit) to indicate when the program crashes
+** Give option to load last autosave on open if lockfile still exists
+
+* =====BUGS=====
+* DONE When I switch to another page or go next/previous page, I should clear focus first
+* DONE If I click on a text element, I need to switch to that page first
+* DONE General Print craziness
+** DONE When I print, the print boxes are bordered
+**** DONE I tried disabling them, but that makes the text grey but the box is still there
+**** DONE Try setting the border to white or 0 or something in .print?
+**** 
+** DONE ShowPages should not be trying to access .print.n1 in a WhereToDraw loop
+
+* This version isn't cutting out the blank pages.
+* Move new palette over to here
+* If a page is empty, don't prompt for ClearCanvas
+
+* =====NEW FEATURES=====
+* Choose between different palettes
+* Import a single page into the whiteboard
+** Write a command that takes a filename and a page number and imports into the current page
+*** DONE Prompt for load file
+*** Prompt: "There are N pages in this file. Which page would you like to import?"
+*** If I save small PNGs of pages, then show them in a little gallery
