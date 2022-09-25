@@ -140,21 +140,6 @@ namespace eval File {
         after 60000 {File::Autosave}; #save every minute
 }
 
-proc UseScreenCapture {fname dir} {
-    global Npages
-    set cmd "./join.sh \"$fname\""
-    for {set pg 1} {$pg<=$Npages} {incr pg} {
-        Duplicate $pg
-        focus .
-        update
-        set wid [exec ./GetWindowID [file tail [info nameofexecutable]] Print]
-        exec /usr/sbin/screencapture -o -l $wid -t pdf $dir/page$pg.pdf
-        append cmd " " $dir/page$pg.pdf
-    }
-    destroy .print
-    puts $cmd
-    exec {*}"$cmd" 
-}
 proc UsePostScript {fname dir} {
     global Npages
     set ps {}; #filenames now
