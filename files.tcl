@@ -23,16 +23,21 @@ namespace eval File {
         .print.pg$n lower grid
         TextUnfocus
     }
-    
+    proc AddExtension {fname ext} {
+        if ![llength $fname] {return}
+        if {[file extension $fname]==""} {set fname $fname.$ext}
+        return $fname
+    }
     proc Save {{autosave 1}} {
         #Saves to a file, possibly a backup file
+        #Not used for PDFs
         if $autosave {
             set fname $File::autosavefile
         } else {
             set fname [tk_getSaveFile]
         }
         if ![llength $fname] {return}
-        if ![file extension $fname] {set fname $fname.pdf}
+        set fname [AddExtension $fname "txt"]
     set F [open $fname "w"]
         puts $F [array get Elements::elements]
         close $F
@@ -128,11 +133,11 @@ namespace eval File {
         }
     }
     proc Autosave {} {
-    bind .palette.autosave <1> {}
-    Save
-    .palette.autosave config -text "Autosaved [clock format [clock seconds] -format %H:%M]"
-    after 5000 {.palette.autosave config -text ""}
-    after 60000 {File::Autosave}; #save every minute
+        bind .palette.autosave <1> {}
+        Save
+        .palette.autosave config -text "Autosaved [clock format [clock seconds] -format %H:%M]"
+        after 5000 {.palette.autosave config -text ""}
+        after 60000 {File::Autosave}; #save every minute
 }
 
 proc UseScreenCapture {fname dir} {
@@ -177,7 +182,7 @@ proc UsePostScript {fname dir} {
 }
 proc SavePDF {} {
     variable tmpdir
-    set fname [tk_getSaveFile]
+    set fname [AddExtension [tk_getSaveFile] "pdf"]
     if [llength $fname] {
         set dir $tmpdir
         file mkdir $dir

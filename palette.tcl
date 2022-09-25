@@ -10,7 +10,11 @@ bind . <Left> "MovePage -1"
 bind . <Right> "MovePage +1"
 #FIX: Clear should be undoable or at least have a confirm
 #set colors "black red blue purple white"
-set colors "black #cc6677 #332288 #DDCC77 #117733 white"
+set red #D81B1B
+set blue #1E88E5
+set yellow #FFC107
+set green #028A92
+set colors "black $red $blue $yellow $green white"
 set currentcolor "black"
 set lastpencolor "black"; #if currentcolor is white, last color that's not black
 proc SelectColor {color} {
@@ -81,3 +85,4 @@ bind . <Command-d> {ToggleDash}
 ##########
 pack [label .palette.autosave -text "Autosave?" -fg blue -bg grey]
 bind .palette.autosave <1> {File::Autosave}
+File::Autosave

@@ -105,6 +105,14 @@ proc Last {page} {
     return [lindex [lsort -integer -increasing $indices] end]
 #    return [expr [llength [lindex $elements $page]]-1]
 }
+proc GetCoords {page index} {
+    variable elements
+    set coindex 2; #the index in the command that has the coordinates
+    set idx $page[Tag $index]
+#    puts "idx=$idx"
+#    puts "elements names = [array names elements]"
+    return [lindex $elements($idx) $coindex]
+}
 proc Append {page x y} {#if the last element was a line, then add {x y} to its first parameter
     variable elements
     set coindex 2; #the index in the command that has the coordinates

@@ -1,6 +1,7 @@
 source log.tcl
 source menu.tcl
 source text.tcl
+source gray.tcl
 destroy .name .palette .c .dir .mirror
 set scale 1; #amount by which mirror is scaled relative to the original
 set id [clock seconds]; #use for backups
@@ -34,16 +35,21 @@ proc SaveMouse {x y w} {
     set ::mousepg [regsub "\.c\.pg" $w ""]
 }
 proc NewPage {} {
-    global Npages cX cY
+    global Npages cX cY scale
     incr Npages
     Elements::NewPage $Npages
     foreach f [Drawing::WhereToDraw] {
-        canvas $f.pg$Npages -width $cX -height $cY -bd 1 -relief sunken -bg white
+        set herescale 1
+        if [string match $f ".mirror"] {set herescale $scale}
+        canvas $f.pg$Npages -width [expr $cX*$herescale] -height [expr $cY*$herescale] -bd 1 -relief sunken -bg white
         label $f.n$Npages -text $Npages
     }
-
-    bind .c.pg$Npages <Motion> {SaveMouse %x %y %W}
+    .c.pg$Npages create line 0 0 0 0 -fill "black" -dash . -tag gray
+    .c.pg$Npages create line 0 0 0 0 -fill "blue" -dash . -tag horizontal
+    .c.pg$Npages create line 0 0 0 0 -fill "blue" -dash . -tag vertical
+    bind .c.pg$Npages <Motion> {Gray::hide; SaveMouse %x %y %W}
     bind .c.pg$Npages <B1-Motion> {Drag %x %y}
+    Gray::dobind .c.pg$Npages
     bind .c.pg$Npages <ButtonRelease-1> {DoneDrawing}
     bind .c.pg$Npages <1> "Activate $Npages; Click %x %y"
     bind .c.pg$Npages <Shift-1> {Drag %x %y;break}; #draws straight lines for free!
@@ -170,6 +176,14 @@ proc ClearCanvas {{n -1} {prompt "yes"}} {
 }
 
 #--------------------MOUSE--------------------
+proc ScaledCoords {win x y} {
+    global scale
+    if {$win == ".mirror"} {
+        return "[expr $scale*$x] [expr $scale*$y]"
+    } else {
+        return "$x $y"
+    }
+}
 proc Click {x y} {
     global currentpage currentdash
     TextUnfocus
@@ -181,7 +195,7 @@ proc Click {x y} {
     if {$color == "pointer"} {
         foreach f [Drawing::WhereToDraw] {
             $f.pg$currentpage delete pointer
-            $f.pg$currentpage create text $x $y -fill purple -text "☜" -font "Times 48" -tag pointer
+            $f.pg$currentpage create text [ScaledCoords $f $x $y] -fill purple -text "☜" -font "Times 48" -tag pointer
         }
     } else {
         Drawing::StartLine "$x $y" $width $color $currentdash
@@ -196,7 +210,7 @@ proc Drag {x y} {
     }
     if {$color=="pointer"} {
         foreach f [Drawing::WhereToDraw] {
-            $f.pg$currentpage coords pointer $x $y
+            $f.pg$currentpage coords pointer {*}[ScaledCoords $f $x $y]
         }
     } else {
         Drawing::ContinueLine "$x $y" $width $color $::currentdash
