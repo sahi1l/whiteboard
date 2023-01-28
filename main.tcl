@@ -41,7 +41,7 @@ proc NewPage {} {
     foreach f [Drawing::WhereToDraw] {
         set herescale 1
         if [string match $f ".mirror"] {set herescale $scale}
-        canvas $f.pg$Npages -width [expr $cX*$herescale] -height [expr $cY*$herescale] -bd 1 -relief sunken -bg white
+        canvas $f.pg$Npages -width [expr $cX*$herescale] -height [expr $cY*$herescale] -bd 3 -relief sunken -bg white
         label $f.n$Npages -text $Npages
     }
     .c.pg$Npages create line 0 0 0 0 -fill "black" -dash . -tag gray
