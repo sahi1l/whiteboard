@@ -84,5 +84,8 @@ SelectDash ""
 bind . <Command-d> {ToggleDash}
 ##########
 pack [label .palette.autosave -text "Autosave?" -fg blue -bg grey]
+foreach cls "101 370" {
+    pack [button .palette.save$cls  -text $cls -bg gray -borderwidth 0 -command "File::Save 0 /Users/sahill/www/class/$cls/Repository" -padx 0 -pady 0] -side left -anchor n -fill y 
+}
 bind .palette.autosave <1> {File::Autosave}
 File::Autosave
