@@ -28,13 +28,17 @@ namespace eval File {
         if {[file extension $fname]==""} {set fname $fname.$ext}
         return $fname
     }
-    proc Save {{autosave 1}} {
+    proc Save {{autosave 1} {dst ""}} {
         #Saves to a file, possibly a backup file
         #Not used for PDFs
         if $autosave {
             set fname $File::autosavefile
         } else {
-            set fname [tk_getSaveFile]
+            if [llength $dst] {
+                set fname [tk_getSaveFile -initialdir $dst]
+            } else {
+                set fname [tk_getSaveFile]
+            }
         }
         if ![llength $fname] {return}
         set fname [AddExtension $fname "txt"]
