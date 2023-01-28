@@ -1,39 +1,29 @@
+source prefs.tcl; #localized paths and other things 
 source log.tcl
 source menu.tcl
 source text.tcl
 source gray.tcl
+source files.tcl
+source elements.tcl
+source drawing.tcl
+
 destroy .name .palette .c .dir .mirror
-set scale 1; #amount by which mirror is scaled relative to the original
-set id [clock seconds]; #use for backups
-set aR [expr 11/8.5]; #height divided by width
+set numwidth 15; #width of page number
 set cX 700
-set cY [expr $cX*$aR]
+set cY [expr $cX*(11/8.5)]; #11/8.5 is the aspect ratio desired
 set Npages 0
-set mirrorX 100; #the distance from the left edge for MIRROR
-set ptrwidth 16
 array set objects {}
 set currentpage 1; #what page number we're on
-set numwidth 15; #width of page number
 label .dir -text "Directory" -anchor w
 frame .help -bg grey -height 20
 frame .palette -bg grey -height 30
 frame .c -width [expr 2*$cX] -height [expr $numwidth+$cY]; #contains all canvases
-toplevel .mirror -width [expr 2*$cX] -height [expr $numwidth+$cY]
-wm title .mirror "*MIRROR*"
 wm title . "Whiteboard"
 pack  .palette .c -side top -fill x
 
 source mirror.tcl
-source scaling.tcl
-source elements.tcl
-source drawing.tcl
+
 #----PAGES------------------------------------------
-set mousex 0; set mousey 0; set mousepg 0
-proc SaveMouse {x y w} {
-    set ::mousex $x
-    set ::mousey $y
-    set ::mousepg [regsub "\.c\.pg" $w ""]
-}
 proc NewPage {} {
     global Npages cX cY scale
     incr Npages
@@ -225,12 +215,10 @@ proc DoneDrawing {} {
 }
 
 #source grid.tcl
-source files.tcl
 File::init
 source palette.tcl
 NewPage
 NewPage
 ShowPages 1
-#Autosave
 source clipboard.tcl
 

@@ -11,15 +11,6 @@ proc ScaleCoords {win coords} {
         return $ncoords
     }
 }
-
-proc ShrinkMirror {} {
-    global scale
-    SetScale [expr $scale*0.8]
-}
-proc GrowMirror {} {
-    global scale
-    SetScale [expr $scale*1.25]
-}
                    
 proc SetScale {newscale} {
     global scale mirrorW mirrorH Npages cX cY
@@ -27,9 +18,6 @@ proc SetScale {newscale} {
     set scale $newscale
     puts "SetScale $scale,$ratio"
     if ![winfo exists .mirror] {return 0}
-    #Resize the mirror window
-#    ResizeMirror
-    #Resize the canvas windows and numbers
     puts $Npages,[winfo children .mirror]
     for {set n 1} {$n<=$Npages} {incr n} {
         grid forget .mirror.pg$n
@@ -43,8 +31,10 @@ proc SetScale {newscale} {
     ShowPages $::currentpage
 }
 
+proc ShrinkMirror {} {SetScale [expr $::scale*0.8]}
+proc GrowMirror {} {SetScale [expr $::scale*1.25]}
+
 bind . <Command-plus> {GrowMirror}
 bind . <Command-minus> {ShrinkMirror}
-
 bind .mirror <Command-plus> {GrowMirror}
 bind .mirror <Command-minus> {ShrinkMirror}

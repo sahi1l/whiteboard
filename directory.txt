@@ -1,0 +1,126 @@
+AppMain.tcl
+clipboard.tcl
+proc alphabbox 
+proc toclipboard 
+    proc Duplicate 
+proc SaveToClipboard 
+console.tcl
+namespace eval ::tk::console 
+proc ::tk::ConsoleInit 
+proc ::tk::ConsoleSource 
+proc ::tk::ConsoleInvoke 
+proc ::tk::ConsoleHistory 
+proc ::tk::ConsolePrompt 
+proc ::tk::console::Copy 
+proc ::tk::console::Cut 
+proc ::tk::console::Paste 
+proc ::tk::ConsoleBind 
+proc ::tk::ConsoleInsert 
+proc ::tk::ConsoleOutput 
+proc ::tk::ConsoleExit 
+proc ::tk::ConsoleAbout 
+proc ::tk::console::TagProc w 
+proc ::tk::console::MatchPair 
+proc ::tk::console::MatchQuote 
+proc ::tk::console::Blink 
+proc ::tk::console::ConstrainBuffer 
+proc ::tk::console::Expand 
+proc ::tk::console::ExpandPathname str 
+proc ::tk::console::ExpandProcname str 
+proc ::tk::console::ExpandVariable str 
+proc ::tk::console::ExpandBestMatch 
+drawing.tcl
+proc Tag 
+proc PathToIndex 
+proc GetPage 
+proc GetIndex 
+namespace eval Drawing 
+    proc WhereToDraw 
+    proc StartLine 
+    proc ContinueLine 
+    proc Line 
+    proc StartText 
+    proc Text 
+    proc Delete 
+    proc Clear 
+    proc Pass 
+    proc Redraw 
+elements.tcl
+namespace eval Elements 
+proc AddText 
+proc UpdateText 
+proc sortcommand 
+proc SortedKeys 
+proc NewPage 
+proc ClearAll 
+proc Clear 
+proc _add 
+proc Add 
+proc Last 
+proc GetCoords 
+proc Append 
+proc Undo 
+proc Redo 
+proc ClearRedo 
+proc Debug 
+proc SanityCheck 
+files.tcl
+namespace eval File 
+    proc init 
+    proc AddExtension 
+    proc Save 
+    proc ClearAll 
+    proc PromptLoad 
+    proc Load 
+    proc Redraw 
+    proc Autosave 
+    proc UsePostScript 
+    proc SavePDF 
+gray.tcl
+namespace eval Gray 
+    proc dobind 
+    proc hide 
+    proc show 
+grid.tcl
+proc AddGrid 
+proc RemoveGrid 
+log.tcl
+proc log 
+main.tcl
+proc SaveMouse 
+proc NewPage 
+proc MovePage 
+proc ShowPages 
+proc PageExists 
+proc ResetCanvas 
+proc Activate 
+proc Undo 
+proc Redo 
+proc ClearCanvas 
+proc ScaledCoords 
+proc Click 
+proc Drag 
+proc DoneDrawing 
+menu.tcl
+proc MakeMItem 
+mirror.tcl
+proc ShowMirror 
+proc ResizeMirror 
+palette.tcl
+proc SelectColor 
+proc SelectWidth 
+proc SelectDash 
+proc ToggleDash 
+scaling.tcl
+proc ScaleCoords 
+proc ShrinkMirror 
+proc GrowMirror 
+proc SetScale 
+text.tcl
+proc Insert 
+proc TextUnfocus 
+proc TextBind 
+proc ChangeFontSize 
+proc ChangeWidth 
+proc UpdateText 
+proc AnotherBelow 

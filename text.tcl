@@ -1,19 +1,13 @@
 #Want to put keyboard commands in here
 bind . <Command-t> {
-#    puts $mousepg,$currentpage
     if {$mousepg == $currentpage} {
         Drawing::StartText $::mousex $::mousey ""
     }
 }
 set textdragx ""; set textdragy ""; #original click coordinates
-#set textdragoffx ""; set textdragoffy ""
 set textdragW ""
 set textrootx ""; set textrooty ""; #original root coordinates
 destroy .coords
-#toplevel .coords
-#grid [entry .coords.x -textvariable textdragx] [entry .coords.y -textvariable textdragy]
-#grid [entry .coords.rx -textvariable textrootx] [entry .coords.ry -textvariable textrooty]
-#grid [entry .coords.ox -textvariable textdragoffx] [entry .coords.oy -textvariable textdragoffy]
 bind CanvasEntry <1> {
     set textdragW %W
     set textdragx %x
@@ -32,10 +26,7 @@ bind CanvasEntry <B1-Motion> {
     set ny [expr %y-$textdragy + $textrooty]
     set item [regsub ^.*\\. $textdragW ""]
     .c.pg$currentpage coords dragtmp $nx $ny
-#    foreach w [Drawing::WhereToDraw] {
-#        $w.pg$currentpage coords $item $nx $ny
-#    }
-}
+w}
 bind CanvasEntry <ButtonRelease-1> {
     global currentpage
     set nx [expr %x-$textdragx + $textrootx]
@@ -161,4 +152,10 @@ proc AnotherBelow {w} {
     #Use Drawing::StartText to generate a new one
     
     #Set the same font and width
+}
+set mousex 0; set mousey 0; set mousepg 0
+proc SaveMouse {x y w} {
+    set ::mousex $x
+    set ::mousey $y
+    set ::mousepg [regsub "\.c\.pg" $w ""]
 }

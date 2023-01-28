@@ -1,27 +1,11 @@
 namespace eval File {
     proc init {} {
-        variable id [clock seconds]; #identifies the session
+        set sessionID [clock seconds]; #identifies the session
         variable tmpdir "/tmp/hill-whiteboard"
         if {![file exists $tmpdir]} {
             file mkdir $tmpdir
         }
-        variable autosavefile [file join $tmpdir $id]
-    }
-    proc Duplicate {n} {
-        #This creates a duplicate of the current page in a window called .print, for printing
-        set w ".c.pg$n"
-        destroy .print; toplevel .print
-        ::tk::unsupported::MacWindowStyle style .print plain noTitleBar
-        #FIX: Check for Mac; if not, just toplevel it?
-        wm geometry .print +0+0
-        lower .print
-        wm title .print "Print"
-        pack [canvas .print.pg$n -width [expr 200+[winfo width $w]] -height [expr 200+[winfo height $w]]]
-        #Now recreate all the objects in elements
-        Redraw $n
-        #Drawing parameters might need to take a parameter for the right canvas
-        .print.pg$n lower grid
-        TextUnfocus
+        variable autosavefile [file join $tmpdir $sessionID]
     }
     proc AddExtension {fname ext} {
         if ![llength $fname] {return}
@@ -31,6 +15,7 @@ namespace eval File {
     proc Save {{autosave 1} {dst ""}} {
         #Saves to a file, possibly a backup file
         #Not used for PDFs
+        puts A
         if $autosave {
             set fname $File::autosavefile
         } else {
@@ -40,11 +25,14 @@ namespace eval File {
                 set fname [tk_getSaveFile]
             }
         }
+        puts fname=$fname
         if ![llength $fname] {return}
         set fname [AddExtension $fname "txt"]
-    set F [open $fname "w"]
+        puts newfname=$fname
+        set F [open $fname "w"]
         puts $F [array get Elements::elements]
         close $F
+        puts done
     }
     #IDEA: Need a file to load one page
     proc ClearAll {} {
@@ -142,52 +130,41 @@ namespace eval File {
         .palette.autosave config -text "Autosaved [clock format [clock seconds] -format %H:%M]"
         after 5000 {.palette.autosave config -text ""}
         after 60000 {File::Autosave}; #save every minute
-}
-
-proc UsePostScript {fname dir} {
-    global Npages
-    set ps {}; #filenames now
-    set pdf {}
-#    set border "\nfalse 0 startjob pop\n"
-    for {set pg 1} {$pg<=$Npages} {incr pg} {
-        if {[Elements::Last $pg]>=0} { #page is not empty
-            set tmpfname $dir/hill-WB$pg.ps
-            lappend ps $tmpfname
-            .c.pg$pg postscript -file $tmpfname; #-x 0 -y 0 -width [winfo width .c.pg$pg] -height [winfo height .c.pg$pg]
-            lappend pdf $dir/hill-WB$pg.pdf
-            exec /usr/local/bin/ps2pdf -dEPSCrop $dir/hill-WB$pg.ps $dir/hill-WB$pg.pdf
-            
-#            append ps $border
+    }
+    
+    proc UsePostScript {fname dir} {
+        global Npages
+        set ps {}; #filenames now
+        set pdf {}
+        for {set pg 1} {$pg<=$Npages} {incr pg} {
+            if {[Elements::Last $pg]>=0} { #page is not empty
+                source prefs.tcl
+                set tmpfname $dir/hill-WB$pg.ps
+                lappend ps $tmpfname
+                .c.pg$pg postscript -file $tmpfname;
+                lappend pdf $dir/hill-WB$pg.pdf
+                puts ps2pdf=$ps2pdf
+                exec $ps2pdf -dEPSCrop $dir/hill-WB$pg.ps $dir/hill-WB$pg.pdf
+                
+            }
+        }
+        
+        exec -ignorestderr $pdfjoin -o $fname {*}$pdf 
+        exec /usr/bin/open -a Preview $fname
+    }
+    proc SavePDF {{dir ""}} {
+        variable tmpdir
+        if [llength $dir] {
+            set fname [AddExtension [tk_getSaveFile -initialdir $dir] "pdf"]
+        } else {
+            set fname [AddExtension [tk_getSaveFile] "pdf"]
+        }
+        if [llength $fname] {
+            set dir $tmpdir
+            file mkdir $dir
+            UsePostScript $fname $dir
         }
     }
-#    set F [open "$dir/hill-WB.ps" "w"]
-#    puts $F $ps
-    #    close $F
     
-    exec -ignorestderr /Library/TeX/texbin/pdfjoin -o $fname {*}$pdf 
-#    exec /opt/homebrew/bin/psmerge -o $dir/hill-WB.ps {*}$ps
-#    exec /usr/local/bin/ps2pdf $dir/hill-WB.ps $fname
-    exec /usr/bin/open -a Preview $fname
-}
-proc SavePDF {} {
-    variable tmpdir
-    set fname [AddExtension [tk_getSaveFile] "pdf"]
-    if [llength $fname] {
-        set dir $tmpdir
-        file mkdir $dir
-        UsePostScript $fname $dir
-#        set env(PATH) "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Library/TeX/texbin"
-    }
-}
-proc SaveToClipboard {} {
-    global Npages env
-    set pg $::currentpage
-    Duplicate $pg
-    update
-    set wid [exec ./GetWindowID [file tail [info nameofexecutable]] Print]
-    exec screencapture -c -i -o -l $wid -t pdf 
-    destroy .print
-}
-
     
 }
